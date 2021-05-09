@@ -22,12 +22,8 @@ export function run() {
     // const chosenMove = possibleMoves[Math.floor(Math.random() * possibleMoves.length)] ?? 'WAIT'
     const chosenMove = possibleMoves.find((m) => m !== "WAIT") ?? "WAIT";
 
-    const actualMoves = possibleMoves.filter(
-      (m) => m.indexOf("SEED") >= 0 || m.indexOf("GROW") >= 0
-    );
-    const calculatedMoves = calculateMyMoves(turn)
-      .filter((m) => m._type === "seed" || m._type === "grow")
-      .map(moveString);
+    const actualMoves = possibleMoves;
+    const calculatedMoves = calculateMyMoves(turn).map(moveString);
     if (actualMoves.length !== calculatedMoves.length) {
       printErr(turn);
       const [calculatedDiff, actualDiff] = differences(
@@ -48,6 +44,9 @@ export function run() {
           all: actualMoves,
         },
       });
+      throw new Error(
+        "there are errors with the state generation logic: see logs"
+      );
     }
 
     // Write an action using console.log()

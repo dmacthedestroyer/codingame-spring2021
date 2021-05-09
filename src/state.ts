@@ -46,7 +46,7 @@ export function calculateMyMoves(turn: Turn): Move[] {
 
   const myTrees = turn.trees.filter((tree) => tree.isMine);
   const treesByCellIndex = toMap(turn.trees, (tree) => tree.cellIndex);
-  // seed moves
+  // SEED moves
   const seedableTrees = myTrees.filter(
     (tree) => !tree.isDormant && tree.size > 0
   );
@@ -69,7 +69,7 @@ export function calculateMyMoves(turn: Turn): Move[] {
     });
   }
 
-  // grow moves
+  // GROW moves
   const treeCountsBySize = counter(myTrees.map((t) => t.size));
   const growableTrees = myTrees.filter((tree) => !tree.isDormant);
   for (const tree of growableTrees) {
@@ -96,6 +96,19 @@ export function calculateMyMoves(turn: Turn): Move[] {
       moves.push({ _type: "grow", cellIdx: tree.cellIndex });
     }
   }
+
+  // COMPLETE moves
+  if (turn.sun >= 4) {
+    const completableTrees = myTrees.filter(
+      (tree) => tree.size === 3 && !tree.isDormant
+    );
+    for (const tree of completableTrees) {
+      moves.push({ _type: "complete", cellIdx: tree.cellIndex });
+    }
+  }
+
+  // WAIT moves
+  moves.push({ _type: "wait" });
 
   return moves;
 }
